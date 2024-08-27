@@ -64,10 +64,11 @@ isolated function getMovie(mongodb:Database moviesDb, string id) returns Movie|e
     Movie[] result = check from Movie m in findResult
         select m;
     if result.length() != 1 {
-        return error(string `Failed to find a movie with id ${id}`);
+        return error(string `Failed to find the movie with given id: ${id}`);
     }
     return result[0];
 }
+
 
 public type MovieInput record {|
     string title;
