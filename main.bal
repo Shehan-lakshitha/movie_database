@@ -73,13 +73,13 @@ isolated function getMovie(mongodb:Database moviesDb, string id) returns Movie|e
 public type MovieInput record {|
     string title;
     int year;
-    string directorId;
+    string directorName;
 |};
 
 public type MovieUpdate record {|
     string title?;
     int year?;
-    string directorId?;
+    string directorName?;
 |};
 
 public type Movie record {|
