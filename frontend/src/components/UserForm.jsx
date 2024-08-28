@@ -1,20 +1,12 @@
 import React from "react";
 import { Modal, Input, Form } from "antd";
 
-const UserForm = ({
-  visible,
-  onCancel,
-  onOk,
-  form,
-  title,
-  okText,
-  onFinish,
-}) => {
+const UserForm = ({ open, onCancel, onOk, form, title, okText, onFinish }) => {
   return (
     <Modal
       title={title}
       okText={okText}
-      visible={visible}
+      open={open}
       onCancel={onCancel}
       onOk={onOk}
     >
@@ -34,7 +26,7 @@ const UserForm = ({
           <Input />
         </Form.Item>
         <Form.Item
-          name="director"
+          name="directorName"
           label="Director"
           rules={[
             { required: true, message: "Please enter the director name" },

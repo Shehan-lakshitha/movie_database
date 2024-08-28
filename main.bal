@@ -13,7 +13,18 @@ final mongodb:Client mongoDb = check new ({
     connection: URL
 });
 
+@http:ServiceConfig{
+    cors: {
+        allowOrigins: ["http://localhost:5173"],
+        allowMethods: ["GET", "POST", "PUT", "DELETE"],
+        allowHeaders: ["Authorization", "Content-Type"]
+    }
+}
+
+
+
 service on new http:Listener(9091) {
+
     private final mongodb:Database moviesDb;
 
     function init() returns error? {
