@@ -21,8 +21,6 @@ final mongodb:Client mongoDb = check new ({
     }
 }
 
-
-
 service on new http:Listener(9091) {
 
     private final mongodb:Database moviesDb;
