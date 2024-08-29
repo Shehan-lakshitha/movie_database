@@ -2,6 +2,7 @@
 import ballerina/http;
 import ballerina/uuid;
 import ballerinax/mongodb;
+import ballerina/crypto;
 
 configurable string host = "localhost";
 configurable int port = 27017;
@@ -24,9 +25,11 @@ final mongodb:Client mongoDb = check new ({
 service on new http:Listener(9091) {
 
     private final mongodb:Database moviesDb;
+    private final mongodb:Database usersDb;
 
     function init() returns error? {
         self.moviesDb = check mongoDb->getDatabase("movies");
+        self.usersDb = check mongoDb->getDatabase("users");
     }
 
     resource function get movies() returns Movie[]|error {
@@ -65,6 +68,34 @@ service on new http:Listener(9091) {
         }
         return id;
     }
+
+
+    //user endpoints
+    resource function post singup(UserInput input) returns User|error {
+        string id = uuid:createType1AsString();
+        User user = {id, ...input};
+
+        user.password = hashPassword(user.password);
+        mongodb:Collection users = check self.usersDb->getCollection("users");
+        check users->insertOne(user);
+        return user;
+        
+    }
+
+    resource function post login(UserInput input) returns string|error {
+        mongodb:Collection users = check self.usersDb->getCollection("users");
+        stream<User, error?> findResult = check users->find({username: input.username});
+        User[] result = check from User u in findResult
+            select u;
+        if result.length() != 1 {
+            return error("User not found");
+        }
+        User user = result[0];
+        if !validatePassword(input.password, user.password) {
+            return error("Invalid username or password");
+        }
+        return result[0].id;
+    }
 }
 
 isolated function getMovie(mongodb:Database moviesDb, string id) returns Movie|error {
@@ -78,6 +109,15 @@ isolated function getMovie(mongodb:Database moviesDb, string id) returns Movie|e
     return result[0];
 }
 
+isolated function hashPassword(string password) returns string {
+    byte[] passwordBytes = crypto:hashSha256(password.toBytes());
+    return passwordBytes.toString();
+}
+
+isolated function validatePassword(string plainpassword, string hashedPassword) returns boolean {
+    string hashedInputPassword = hashPassword(plainpassword);
+    return hashedInputPassword == hashedPassword;
+}
 
 public type MovieInput record {|
     string title;
@@ -94,5 +134,16 @@ public type MovieUpdate record {|
 public type Movie record {|
     readonly string id;
     *MovieInput;
+|};
+
+public type User record {|
+    readonly string id;
+    string username;
+    string password;
+|};
+
+public type UserInput record {|
+    string username;
+    string password;
 |};
 

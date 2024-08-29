@@ -46,6 +46,9 @@ dependencies = [
 	{org = "ballerina", name = "jballerina.java"},
 	{org = "ballerina", name = "time"}
 ]
+modules = [
+	{org = "ballerina", packageName = "crypto", moduleName = "crypto"}
+]
 
 [[package]]
 org = "ballerina"
@@ -312,6 +315,7 @@ org = "shehan_lakshitha"
 name = "movie_database"
 version = "0.1.0"
 dependencies = [
+	{org = "ballerina", name = "crypto"},
 	{org = "ballerina", name = "http"},
 	{org = "ballerina", name = "uuid"},
 	{org = "ballerinai", name = "observe"},
