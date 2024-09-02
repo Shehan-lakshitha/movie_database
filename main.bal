@@ -110,6 +110,7 @@ isolated function getMovie(mongodb:Database moviesDb, string id) returns Movie|e
 }
 
 isolated function hashPassword(string password) returns string {
+    //password hashed using sha256
     byte[] passwordBytes = crypto:hashSha256(password.toBytes());
     return passwordBytes.toString();
 }
