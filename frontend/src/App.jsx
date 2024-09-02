@@ -15,11 +15,6 @@ function App() {
   const BASE_URL = "http://localhost:9091";
 
   const colomns = [
-    // {
-    //   title: "Id",
-    //   dataIndex: "id",
-    //   key: "id",
-    // },
     {
       title: "Title",
       dataIndex: "title",
@@ -120,14 +115,18 @@ function App() {
     form.resetFields();
   };
 
-  const onDeleteUser = (record) => {
+  const onDeleteUser = async (record) => {
     try {
-      const response = fetch(`${BASE_URL}/movies/${record.id}`, {
+      const response = await fetch(`${BASE_URL}/movies/${record.id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
       });
+
+      if (!response.ok){
+        throw new Error("Failed to delete movie");
+      }
 
       message.success("Movie deleted successfully");
     } catch (error) {

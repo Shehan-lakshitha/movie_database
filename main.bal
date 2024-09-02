@@ -55,7 +55,7 @@ service on new http:Listener(9091) {
         mongodb:Collection movies = check self.moviesDb->getCollection("movies");
         mongodb:UpdateResult updateResult = check movies->updateOne({id}, {set: update});
         if updateResult.modifiedCount != 1 {
-            return error(string `Failed to update the movie with id ${id}`);
+            return error(string `Failed to update the movie with id: ${id}`);
         }
         return getMovie(self.moviesDb, id);
     }
@@ -64,7 +64,7 @@ service on new http:Listener(9091) {
         mongodb:Collection movies = check self.moviesDb->getCollection("movies");
         mongodb:DeleteResult deleteResult = check movies->deleteOne({id});
         if deleteResult.deletedCount != 1 {
-            return error(string `Failed to delete the movie ${id}`);
+            return error(string `Failed to delete the movie with id: ${id}`);
         }
         return id;
     }
@@ -88,11 +88,11 @@ service on new http:Listener(9091) {
         User[] result = check from User u in findResult
             select u;
         if result.length() != 1 {
-            return error("User not found");
+            return error("Error, User not found");
         }
         User user = result[0];
         if !validatePassword(input.password, user.password) {
-            return error("Invalid username or password");
+            return error("Invalid username or password, Please check the credentials");
         }
         return result[0].id;
     }
