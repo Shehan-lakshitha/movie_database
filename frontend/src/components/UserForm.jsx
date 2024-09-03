@@ -13,7 +13,7 @@ const UserForm = ({ open, onCancel, onOk, form, title, okText, onFinish }) => {
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item
           name="title"
-          label="Book Title"
+          label="Movie Title"
           rules={[{ required: true, message: "Please enter the Movie title" }]}
         >
           <Input />

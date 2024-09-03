@@ -155,7 +155,7 @@ function App() {
         onCancel={() => setAddMovie(false)}
         onOk={form.submit}
         form={form}
-        title="Add Movie"
+        title="Add a new movie"
         okText="Add"
         onFinish={handleAddMovie}
       />
